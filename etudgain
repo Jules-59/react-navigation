@@ -1,0 +1,272 @@
+import React, { useState } from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  Image,
+  TextInput,
+  StatusBar,
+} from 'react-native';
+
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+const Stack = createNativeStackNavigator();
+
+// Données offres
+const OFFRES = {
+  Logement: [
+    { id: '1', title: 'Coloc pas chère', price: '300€/mois', image: 'https://www.investissement-locatif.com/files/realizations/600x428/5e65f1ce5272de70d34246c5935d3dff9919a7c8-realisation-studio-lille-600x428.jpeg', description: 'Chambre sympa proche métro.', address: 'Lille, 10 rue de la Paix' },
+    { id: '2', title: 'Studio meublé', price: '450€/mois', image: 'https://emeline-immobilier.staticlbi.com/1600xauto/images/biens/1/bca96b292dc0499cc61191003e9c243f/photo_a157d9d9cfd20c0ec261f7d15fbefcd8.jpg', description: 'Idéal étudiant, tout équipé.', address: 'Lille, 25 rue Gambetta' },
+    // autres logements ...
+  ],
+  Aides: [
+    { id: '11', title: 'Bourse CROUS', price: 'Selon dossier', image: 'https://vos-aides.fr/wp-content/uploads/2021/03/crous-1.jpg', description: 'Bourse sur critères sociaux.', address: '' },
+    // autres aides ...
+  ],
+  Mobilite: [
+    { id: '21', title: 'Pass transports', price: '25€/mois', image: 'https://www.ilevia.fr/_next/image?url=http%3A%2F%2Fminio-nfs-prod.minio.svc.cluster.local%3A9000%2Fprod-cms%2Fpublic%2Fpass-pass-visuel-header-min.jpg&w=1920&q=100', description: 'Métro & bus illimités.', address: '' },
+    // autres mobilités ...
+  ],
+  Restaurants: [
+    { id: '31', name: 'Le Bouillon', price: 'Menu étudiant 12€', image: 'https://media-cdn.tripadvisor.com/media/photo-s/13/56/ef/2b/bouillon-dunkerque.jpg', address: '10 Rue Esquermoise', description: 'Cuisine locale à prix étudiant.' },
+    // autres restaurants ...
+  ],
+};
+
+const categories = Object.keys(OFFRES);
+
+// Logo composant
+function Logo() {
+  return (
+    <View style={styles.logoContainer}>
+      <Text style={styles.logoText}>Etudgain</Text>
+    </View>
+  );
+}
+
+// Écran d'accueil
+function HomeScreen({ navigation }) {
+  return (
+    <View style={styles.container}>
+      <StatusBar barStyle="light-content" />
+      <Logo />
+      <Text style={styles.title}>Bienvenue sur Etudgain !</Text>
+      <Text style={styles.subtitle}>Choisissez une catégorie :</Text>
+
+      {categories.map((cat) => (
+        <TouchableOpacity
+          key={cat}
+          style={styles.homeButton}
+          onPress={() => navigation.navigate('Category', { category: cat })}
+        >
+          <Text style={styles.homeButtonText}>{cat}</Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
+}
+
+// Écran liste des offres par catégorie
+function CategoryScreen({ route, navigation }) {
+  const { category } = route.params;
+  const [searchText, setSearchText] = useState('');
+
+  const data = OFFRES[category] || [];
+
+  // Recherche dans titres ou noms (title ou name)
+  const filteredData = data.filter(item =>
+    ((item.title || item.name) ?? '').toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  return (
+    <View style={styles.container}>
+      <StatusBar barStyle="light-content" />
+      <Logo />
+      <Text style={styles.title}>{category}</Text>
+
+      <TextInput
+        style={styles.searchInput}
+        placeholder={`Rechercher dans ${category}...`}
+        placeholderTextColor="#999"
+        value={searchText}
+        onChangeText={setSearchText}
+      />
+
+      <FlatList
+        data={filteredData}
+        keyExtractor={item => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() => navigation.navigate('Detail', { item })}
+          >
+            <Image source={{ uri: item.image }} style={styles.cardImage} />
+            <View style={styles.cardContent}>
+              <Text style={styles.cardTitle}>{item.title || item.name}</Text>
+              {item.price && <Text style={styles.cardPrice}>{item.price}</Text>}
+            </View>
+          </TouchableOpacity>
+        )}
+        contentContainerStyle={{ paddingBottom: 20 }}
+      />
+    </View>
+  );
+}
+
+// Écran détail d’une offre
+function DetailScreen({ route }) {
+  const { item } = route.params;
+
+  return (
+    <View style={styles.container}>
+      <StatusBar barStyle="light-content" />
+      <Logo />
+      <Text style={styles.detailTitle}>{item.title || item.name}</Text>
+      <Image source={{ uri: item.image }} style={styles.detailImage} />
+      <View style={styles.detailInfo}>
+        {item.price && <Text style={styles.detailText}><Text style={{ fontWeight: 'bold' }}>Prix: </Text>{item.price}</Text>}
+        {item.address ? (
+          <Text style={styles.detailText}><Text style={{ fontWeight: 'bold' }}>Adresse: </Text>{item.address}</Text>
+        ) : null}
+        {item.description ? (
+          <Text style={styles.detailText}><Text style={{ fontWeight: 'bold' }}>Description: </Text>{item.description}</Text>
+        ) : null}
+      </View>
+    </View>
+  );
+}
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="Home"
+        screenOptions={{
+          headerStyle: { backgroundColor: '#f39c12' },
+          headerTintColor: '#2c3e50',
+          headerTitleStyle: { fontWeight: 'bold' },
+        }}
+      >
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ title: 'Accueil' }}
+        />
+        <Stack.Screen
+          name="Category"
+          component={CategoryScreen}
+          options={({ route }) => ({ title: route.params.category })}
+        />
+        <Stack.Screen
+          name="Detail"
+          component={DetailScreen}
+          options={({ route }) => ({ title: route.params.item.title || route.params.item.name })}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#2c3e50',
+    paddingTop: StatusBar.currentHeight || 20,
+    paddingHorizontal: 20,
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: 15,
+    marginTop: 5,
+  },
+  logoText: {
+    color: '#f39c12',
+    fontSize: 36,
+    fontWeight: 'bold',
+  },
+  title: {
+    color: '#f39c12',
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  subtitle: {
+    color: '#ecf0f1',
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  homeButton: {
+    backgroundColor: '#34495e',
+    paddingVertical: 15,
+    borderRadius: 10,
+    marginBottom: 12,
+  },
+  homeButtonText: {
+    color: '#ecf0f1',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  searchInput: {
+    backgroundColor: '#34495e',
+    color: '#fff',
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    height: 40,
+    marginBottom: 15,
+  },
+  card: {
+    flexDirection: 'row',
+    backgroundColor: '#34495e',
+    borderRadius: 10,
+    marginBottom: 10,
+    overflow: 'hidden',
+  },
+  cardImage: {
+    width: 100,
+    height: 100,
+  },
+  cardContent: {
+    flex: 1,
+    padding: 10,
+    justifyContent: 'center',
+  },
+  cardTitle: {
+    color: '#f39c12',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  cardPrice: {
+    color: '#ecf0f1',
+    marginTop: 5,
+    fontWeight: '600',
+  },
+  detailTitle: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    color: '#f39c12',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  detailImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: 10,
+    marginBottom: 15,
+  },
+  detailInfo: {
+    backgroundColor: '#34495e',
+    padding: 15,
+    borderRadius: 10,
+  },
+  detailText: {
+    color: '#ecf0f1',
+    fontSize: 16,
+    marginBottom: 8,
+  },
+});
