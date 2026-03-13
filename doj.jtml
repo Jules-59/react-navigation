@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projet de Reprise - Department of Justice</title>
+<style>
+body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#0f172a;color:#e5e7eb}
+header{background:#020617;padding:40px;text-align:center}
+header h1{margin:0;font-size:40px}
+header p{opacity:0.8}
+section{padding:40px;max-width:1000px;margin:auto}
+.card-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+.card{background:#1e293b;padding:20px;border-radius:10px;box-shadow:0 0 10px rgba(0,0,0,0.4)}
+.card h3{margin-top:0;color:#38bdf8}
+.role{font-weight:bold;color:#facc15}
+footer{background:#020617;text-align:center;padding:20px;margin-top:40px;font-size:14px}
+</style>
+</head>
+<body>
+
+<header>
+<h1>Department of Justice</h1>
+<p>Projet de reprise et de réorganisation du DOJ</p>
+</header>
+
+<section>
+<h2>Présentation du projet</h2>
+<p>
+Notre projet vise à reprendre et restructurer le Department of Justice afin d'assurer une organisation claire, active et professionnelle.
+L'objectif est de garantir une présence judiciaire forte en ville, d'assurer le suivi des affaires et de maintenir un système légal stable pour tous les citoyens.
+</p>
+</section>
+
+<section>
+<h2>Direction</h2>
+<div class="card-container">
+
+<div class="card">
+<h3>Sandro Belluci</h3>
+<p class="role">Procureur Général</p>
+<p>Responsable principal du Department of Justice et supervise l'ensemble du système judiciaire.</p>
+</div>
+
+<div class="card">
+<h3>Mason Knox</h3>
+<p class="role">Adjoint Direct</p>
+<p>Assiste directement le Procureur Général dans la gestion et les décisions importantes.</p>
+</div>
+
+</div>
+</section>
+
+<section>
+<h2>Administration</h2>
+<div class="card-container">
+
+<div class="card">
+<h3>Edvin Le Jeune</h3>
+<p class="role">Executive Assistant</p>
+</div>
+
+<div class="card">
+<h3>Elene Krone</h3>
+<p class="role">Executive Assistant</p>
+</div>
+
+</div>
+</section>
+
+<section>
+<h2>Procureurs</h2>
+<div class="card-container">
+
+<div class="card">
+<h3>Davis Krone</h3>
+<p class="role">Procureur Principal</p>
+</div>
+
+<div class="card">
+<h3>Mason Carter</h3>
+<p class="role">Procureur Adjoint</p>
+</div>
+
+<div class="card">
+<h3>Terrel Walker</h3>
+<p class="role">Procureur Débutant</p>
+</div>
+
+</div>
+</section>
+
+<footer>
+<p>Projet DOJ RP - Présentation de l'équipe dirigeante</p>
+</footer>
+
+</body>
+</html>
